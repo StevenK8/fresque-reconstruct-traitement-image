@@ -13,7 +13,7 @@ Mat rotate(Mat src, double angle)   //rotate function returning mat object with 
     Mat dst;      //Mat object for output image file
     Point2f pt(src.cols/2., src.rows/2.);          //point from where to rotate    
     Mat r = getRotationMatrix2D(pt, angle, 1.0);      //Mat object for storing after rotation
-    warpAffine(src, dst, r, Size(src.cols, src.rows));  ///applie an affine transforation to image.
+    warpAffine(src, dst, r, Size(src.cols, src.rows),INTER_LINEAR, BORDER_CONSTANT, Scalar(205, 203, 206)); 
     return dst;         //returning Mat object for output image file
 }
 
@@ -38,15 +38,19 @@ vector<vector<string>> readText(string filename){
 
 int main(int argc, char** argv){
 
-	Mat imageIn = imread( argv[1], IMREAD_GRAYSCALE );
+	// Mat imageIn = imread( argv[1], IMREAD_GRAYSCALE );
 	Mat fragment;
 	Rect ROI;
-	Mat DispImage = Mat::zeros(Size(1920,900), CV_8UC3);
+	Mat DispImage = Mat::zeros(Size(2100,900), CV_8UC4);
+	DispImage.setTo(Scalar(205, 203, 206));
+	// Mat background(DispImage.rows,DispImage.cols, CV_8UC3, Scalar(205, 203, 206));
+	// Rect ROI2(0,0,(int)( DispImage.rows ), (int)( DispImage.cols ));
+	// background.copyTo(DispImage);
 	
 	vector<vector<string>> grid = readText("fragments.txt");
 	for ( auto row : grid )
 	{
-		fragment = imread( "./frag_eroded/frag_eroded_"+row[0]+".png" );
+ 		fragment = imread( "./frag_eroded/frag_eroded_"+row[0]+".png",-1);
 		if(! fragment.data )
     	{
         	cout <<  "Could not open or find the image" << std::endl ;
