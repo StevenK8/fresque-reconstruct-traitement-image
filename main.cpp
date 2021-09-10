@@ -35,19 +35,19 @@ vector<vector<string>> readText(string filename)
 	return list;
 }
 
-void overlayImage(const cv::Mat &background, const cv::Mat &foreground,
-				  cv::Mat &output, cv::Point2i location)
+void overlayImage(const Mat &background, const Mat &foreground,
+				  Mat &output, Point2i location)
 {
 	background.copyTo(output);
 
-	for (int y = std::max(location.y, 0); y < background.rows; ++y)
+	for (int y = max(location.y, 0); y < background.rows; ++y)
 	{
 		int fY = y - location.y;
 
 		if (fY >= foreground.rows)
 			break;
 
-		for (int x = std::max(location.x, 0); x < background.cols; ++x)
+		for (int x = max(location.x, 0); x < background.cols; ++x)
 		{
 			int fX = x - location.x;
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 	vector<vector<string>> grid = readText("fragments.txt");
 	for (auto row : grid)
 	{
-		fragment = imread("./frag_eroded/frag_eroded_" + row[0] + ".png", CV_8UC4);
+		fragment = imread("./frag_eroded/frag_eroded_" + row[0] + ".png", IMREAD_UNCHANGED);
 		if (!fragment.data)
 		{
 			cout << "Could not open or find the image" << std::endl;
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 		}
 		// Rect ROI(stoi(row[1]), stoi(row[2]),(int)( fragment.rows ), (int)( fragment.cols ));
 		// Mat temp;
-		// resize(fragment,temp, Size(ROI.width, ROI.height));
+		// resize(fragment,fragment, Size(fragment.rows*1.8, fragment.cols*1.8));
 		fragment = rotate(fragment, stod(row[3]));
 		overlayImage(DispImage, fragment, DispImage, cv::Point(stoi(row[1]), stoi(row[2])));
 		// temp.copyTo(DispImage(ROI));
