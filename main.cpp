@@ -69,19 +69,15 @@ void overlayImage(const Mat &background, const Mat &foreground,
 	}
 }
 
-int main(int argc, char **argv)
+int showImageFragments(string filename)
 {
-
 	// Mat imageIn = imread("Michelangelo_ThecreationofAdam_1707x775.jpg", IMREAD_GRAYSCALE );
 	Mat fragment;
 	Rect ROI;
 	Mat DispImage = Mat::zeros(Size(1707, 775), CV_8UC4);
 	DispImage.setTo(Scalar(193, 187, 182));
-	// Mat background(DispImage.rows,DispImage.cols, CV_8UC3, Scalar(205, 203, 206));
-	// Rect ROI2(0,0,(int)( DispImage.rows ), (int)( DispImage.cols ));
-	// imageIn.copyTo(DispImage);
 
-	vector<vector<string>> grid = readText("fragments.txt");
+	vector<vector<string>> grid = readText(filename);
 	for (auto row : grid)
 	{
 		fragment = imread("./frag_eroded/frag_eroded_" + row[0] + ".png", IMREAD_UNCHANGED);
@@ -90,18 +86,77 @@ int main(int argc, char **argv)
 			cout << "Could not open or find the image" << std::endl;
 			return -1;
 		}
-		// Rect ROI(stoi(row[1]), stoi(row[2]),(int)( fragment.rows ), (int)( fragment.cols ));
-		// Mat temp;
-		// resize(fragment,fragment, Size(fragment.rows*1.8, fragment.cols*1.8));
 		fragment = rotate(fragment, stod(row[3]));
-		overlayImage(DispImage, fragment, DispImage, cv::Point(stoi(row[1])-fragment.cols/2, stoi(row[2])-fragment.rows/2));
-		// temp.copyTo(DispImage(ROI));
+		overlayImage(DispImage, fragment, DispImage, Point(stoi(row[1]) - fragment.cols / 2, stoi(row[2]) - fragment.rows / 2));
 	}
 
 	imshow("Display window", DispImage);
 	resizeWindow("Display window", 1707, 775);
 
 	waitKey(0);
+	return 0;
+}
+
+bool isPlacedRight(int dx, int dy, int da, int x, int y, double a, int xb, int yb, double ab)
+{
+	if ((abs(x - xb) < dx) && (abs(y - yb) < dy) && (abs(a - ab) < da))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int calculSurface(string id)
+{
+	fragment = imread("./frag_eroded/frag_eroded_" + id + ".png", IMREAD_UNCHANGED);
+	if (!fragment.data)
+	{
+		cout << "Could not open or find the image" << std::endl;
+		return -1;
+	}
+
+	cvtColor(fragment, fragment, COLOR_BGR2HSV);
+
+	return 0;
+}
+
+int getScore(string filename, string reference, int dx, int dy, int da)
+{
+	int r = 0;
+	int s = 0;
+	int surfaceTotale = 0;
+	int surfaceBonne = 0;
+	int surfaceFausse = 0;
+	vector<vector<string>> gridSolution = readText(filename);
+	vector<vector<string>> gridReference = readText(reference);
+
+	while (s < gridSolution.size() && r < gridReference.size())
+	{
+		surfaceTotale += calculSurface(gridSolution[s][0]);
+		if (gridReference[r][0] < gridSolution[s][0])
+		{
+			r++;
+		}
+		else if (gridReference[r][0] > gridSolution[s][0])
+		{
+			s++;
+			surfaceFausse += calculSurface(gridSolution[s][0]);
+		}
+
+		cout << gridReference[r][0] << " " << gridSolution[s][0] << " " << isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3])) << "\n";
+		r++;
+		s++;
+	}
+	return 0;
+}
+
+int main(int argc, char **argv)
+{
+	// showImageFragments("fragments.txt");
+	getScore("solution.txt", "fragments.txt", 1, 1, 1);
 
 	return 0;
 }
