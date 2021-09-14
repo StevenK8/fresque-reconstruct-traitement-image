@@ -12,7 +12,7 @@ Mat rotate(Mat src, double angle)
 	Mat dst;
 	Point2f pt(src.cols / 2., src.rows / 2.);
 	Mat r = getRotationMatrix2D(pt, angle, 1.0);
-	warpAffine(src, dst, r, Size(src.cols, src.rows), INTER_LINEAR, BORDER_CONSTANT, Scalar(205, 203, 206));
+	warpAffine(src, dst, r, Size(src.cols, src.rows));
 	return dst;
 }
 
@@ -72,14 +72,14 @@ void overlayImage(const Mat &background, const Mat &foreground,
 int main(int argc, char **argv)
 {
 
-	// Mat imageIn = imread( argv[1], IMREAD_GRAYSCALE );
+	// Mat imageIn = imread("Michelangelo_ThecreationofAdam_1707x775.jpg", IMREAD_GRAYSCALE );
 	Mat fragment;
 	Rect ROI;
 	Mat DispImage = Mat::zeros(Size(1707, 775), CV_8UC4);
-	DispImage.setTo(Scalar(192, 194, 191));
+	DispImage.setTo(Scalar(193, 187, 182));
 	// Mat background(DispImage.rows,DispImage.cols, CV_8UC3, Scalar(205, 203, 206));
 	// Rect ROI2(0,0,(int)( DispImage.rows ), (int)( DispImage.cols ));
-	// background.copyTo(DispImage);
+	// imageIn.copyTo(DispImage);
 
 	vector<vector<string>> grid = readText("fragments.txt");
 	for (auto row : grid)
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 		// Mat temp;
 		// resize(fragment,fragment, Size(fragment.rows*1.8, fragment.cols*1.8));
 		fragment = rotate(fragment, stod(row[3]));
-		overlayImage(DispImage, fragment, DispImage, cv::Point(stoi(row[1]), stoi(row[2])));
+		overlayImage(DispImage, fragment, DispImage, cv::Point(stoi(row[1])-fragment.cols/2, stoi(row[2])-fragment.rows/2));
 		// temp.copyTo(DispImage(ROI));
 	}
 
