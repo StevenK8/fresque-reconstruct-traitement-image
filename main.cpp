@@ -158,7 +158,7 @@ int getScore(string filename, string reference, int dx, int dy, int da)
 			s++;
 			surfaceFausse += calculSurface(gridSolution[s][0]);
 		}
-		/*else if (abs(gridReference[r][1]-gridSolution[s][1])<=dx && abs(gridReference[r][2]-gridSolution[s][2])<=dy && abs(gridReference[r][3]-gridSolution[s][3])<=da){
+		/*else if (abs(stoi(gridReference[r][1])-stoi(gridSolution[s][1]))<=dx && abs(stoi(gridReference[r][2])-stoi(gridSolution[s][2]))<=dy && abs(stod(gridReference[r][3])-stod(gridSolution[s][3]))<=da){
 			r++;
 			s++;
 			surfaceBonne+=surfaceFausse +=calculSurface(gridSolution[r][0]);
