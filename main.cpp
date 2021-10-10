@@ -150,16 +150,28 @@ int getScore(string filename, string reference, int dx, int dy, int da)
 		cout << gridReference[r][0] << " " << gridSolution[s][0] << " " << isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3])) << "\n";
 		r++;
 		s++;*/
-
-		if (abs(gridReference[r][1]-gridSolution[s][1])<=dx && abs(gridReference[r][2]-gridSolution[s][2])<=dy && abs(gridReference[r][3]-gridSolution[s][3])<=da){
+		if (gridReference[r][0] < gridSolution[s][0]){ // Vérifier que l'index est bon
+			r++;
+		}
+		else if (gridReference[r][0] > gridSolution[s][0])
+		{
+			s++;
+			surfaceFausse += calculSurface(gridSolution[s][0]);
+		}
+		/*else if (abs(gridReference[r][1]-gridSolution[s][1])<=dx && abs(gridReference[r][2]-gridSolution[s][2])<=dy && abs(gridReference[r][3]-gridSolution[s][3])<=da){
 			r++;
 			s++;
-			surfaceBonne+=surfaceFausse +=calculSurface(gridSolution[s][0]);
+			surfaceBonne+=surfaceFausse +=calculSurface(gridSolution[r][0]);
+		}*/
+		else if (isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3]))){
+			r++;
+			s++;
+			surfaceBonne+=calculSurface(gridSolution[r][0]);
 		}
 		else{
 			s++;
 			r++;
-			surfaceFausse +=calculSurface(gridSolution[r][0]);
+			surfaceFausse+=calculSurface(gridSolution[s][0]);
 		}
 
 	}
