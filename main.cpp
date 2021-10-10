@@ -41,22 +41,28 @@ void overlayImage(const Mat &background, const Mat &foreground,
 {
 	background.copyTo(output);
 
+	// commence à la ligne indiquée par location, ou à la ligne 0 si location.y est négatif.
 	for (int y = max(location.y, 0); y < background.rows; ++y)
 	{
-		int fY = y - location.y;
+		int fY = y - location.y; // translation
 
+		// les lignes de l'images d'avant-plan ont été traitées
 		if (fY >= foreground.rows)
 			break;
 
+		// commence à la colonne indiquée par location, ou à la colonne 0 si location.x est négatif.
 		for (int x = max(location.x, 0); x < background.cols; ++x)
 		{
-			int fX = x - location.x;
+			int fX = x - location.x; // translation
 
+			// les colonnes de l'images d'avant-plan ont été traitées
 			if (fX >= foreground.cols)
 				break;
 
+			// détermine l'opacité du pixel d'avant-plan, en utilisant son quatrième canal (alpha).
 			double opacity = ((double)foreground.data[fY * foreground.step + fX * foreground.channels() + 3]) / 255.;
 
+			// et combine maintenant le pixel d'arrière-plan et d'avant-plan, en utilisant l'opacité, mais seulement si l'opacité > 0.
 			for (int c = 0; opacity > 0 && c < output.channels(); ++c)
 			{
 				unsigned char foregroundPx =
