@@ -154,12 +154,12 @@ int getScore(string filename, string reference, int dx, int dy, int da)
 		if (abs(gridReference[r][1]-gridSolution[s][1])<=dx && abs(gridReference[r][2]-gridSolution[s][2])<=dy && abs(gridReference[r][3]-gridSolution[s][3])<=da){
 			r++;
 			s++;
-			surfaceBonne++;
+			surfaceBonne+=surfaceFausse +=calculSurface(gridSolution[s][0]);
 		}
 		else{
 			s++;
 			r++;
-			surfaceFausse ++;
+			surfaceFausse +=calculSurface(gridSolution[r][0]);
 		}
 
 	}
