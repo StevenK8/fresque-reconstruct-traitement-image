@@ -111,21 +111,21 @@ bool isPlacedRight(int dx, int dy, int da, int x, int y, double a, int xb, int y
 
 int calculSurface(string id)
 {
-	fragment = imread("./frag_eroded/frag_eroded_" + id + ".png", IMREAD_UNCHANGED);
+	Mat fragment = imread("./frag_eroded/frag_eroded_" + id + ".png", IMREAD_UNCHANGED);
 	if (!fragment.data)
 	{
 		cout << "Could not open or find the image" << std::endl;
-		return -1;
+		return 0;
 	}
 
 	cvtColor(fragment, fragment, COLOR_BGR2HSV);
 
-	return 0;
+	return fragment.cols*fragment.rows;
 }
 
-int getScore(string filename, string reference, int dx, int dy, int da)
+float getScore(string filename, string reference, int dx, int dy, int da)
 {
-	int p=0;
+	float p=0;
 	int r = 0;
 	int s = 0;
 	int surfaceTotale = 0;
@@ -147,9 +147,9 @@ int getScore(string filename, string reference, int dx, int dy, int da)
 			surfaceFausse += calculSurface(gridSolution[s][0]);
 		}
 
-		cout << gridReference[r][0] << " " << gridSolution[s][0] << " " << isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3])) << "\n";
+		cout << gridReference[r][0] << " " << gridSolution[s][0] << " " << isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3])) << "\n";		
 		r++;
-		s++;*/
+		s++;*/	
 		if (gridReference[r][0] < gridSolution[s][0]){ // Vérifier que l'index est bon
 			r++;
 		}
@@ -176,8 +176,10 @@ int getScore(string filename, string reference, int dx, int dy, int da)
 
 	}
 
-
-	p=(surfaceBonne-surfaceFausse)/surfaceTotale;
+	if (surfaceTotale!=0){
+		p=float(surfaceBonne-surfaceFausse)/float(surfaceTotale);
+	}
+	
 		/* Imaginons on a :
 			
 						
@@ -204,7 +206,7 @@ int getScore(string filename, string reference, int dx, int dy, int da)
 int main(int argc, char **argv)
 {
 	// showImageFragments("fragments.txt");
-	getScore("solution.txt", "fragments.txt", 1, 1, 1);
+	cout << getScore("solution.txt", "fragments.txt", 1, 1, 1)*100<<"%";
 
 	return 0;
 }
