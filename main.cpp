@@ -112,16 +112,25 @@ bool isPlacedRight(int dx, int dy, int da, int x, int y, double a, int xb, int y
 
 int calculSurface(string id)
 {
+	int pixelsSurface = 0;
 	Mat fragment = imread("./frag_eroded/frag_eroded_" + id + ".png", IMREAD_UNCHANGED);
 	if (!fragment.data)
 	{
 		cout << "Could not open or find the image" << std::endl;
 		return 0;
 	}
+	Mat_<uchar>::iterator itor = fragment.begin<uchar>();
+	Mat_<uchar>::iterator itorEnd = fragment.end<uchar>();
 
-	cvtColor(fragment, fragment, COLOR_BGR2HSV);
+	for(; itor !=itorEnd; ++itor){
+		if((*itor)>0){
+			pixelsSurface++;
+		}
+	}
 
-	return fragment.cols*fragment.rows;
+	// cvtColor(fragment, fragment, COLOR_BGR2HSV);
+
+	return pixelsSurface;
 }
 
 float getScore(string filename, string reference, int dx, int dy, int da)
