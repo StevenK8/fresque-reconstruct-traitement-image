@@ -125,6 +125,7 @@ int calculSurface(string id)
 
 int getScore(string filename, string reference, int dx, int dy, int da)
 {
+	int p=0;
 	int r = 0;
 	int s = 0;
 	int surfaceTotale = 0;
@@ -136,7 +137,7 @@ int getScore(string filename, string reference, int dx, int dy, int da)
 	while (s < gridSolution.size() && r < gridReference.size())
 	{
 		surfaceTotale += calculSurface(gridSolution[s][0]);
-		if (gridReference[r][0] < gridSolution[s][0])
+		/*if (gridReference[r][0] < gridSolution[s][0])
 		{
 			r++;
 		}
@@ -148,9 +149,44 @@ int getScore(string filename, string reference, int dx, int dy, int da)
 
 		cout << gridReference[r][0] << " " << gridSolution[s][0] << " " << isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3])) << "\n";
 		r++;
-		s++;
+		s++;*/
+
+		if (abs(gridReference[r][1]-gridSolution[s][1])<=dx && abs(gridReference[r][2]-gridSolution[s][2])<=dy && abs(gridReference[r][3]-gridSolution[s][3])<=da){
+			r++;
+			s++;
+			surfaceBonne++;
+		}
+		else{
+			s++;
+			r++;
+			surfaceFausse ++;
+		}
+
 	}
-	return 0;
+
+
+	p=(surfaceBonne-surfaceFausse)/surfaceTotale;
+		/* Imaginons on a :
+			
+						
+			Solution.txt
+						<index>		x		y			a (angle)
+							1 		50 		35 		-154.1465
+							2 		150 	25 		-20.14
+			Fragment.txt
+						1 51 35 -154.1465
+						2 150 25 -20.14
+			Il faut comparer chacun des éléments, sachant qu'on a un epsilon de précision (dx,dy,da)
+			Pour comparer c'est simple on fait, pour le fragment 1
+				abs(x_solution-x_fragment) si c'est inférieur à dx alors on est bon, si c'est supérieur alors c'est faux
+				On fait pareil pour y et pour l'angle.
+
+				Et si je comprend bien la précision p=(Surfacebonne-surfacefausse)/surfacetotal
+
+
+		*/
+
+	return p;
 }
 
 int main(int argc, char **argv)
