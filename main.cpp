@@ -122,8 +122,10 @@ int calculSurface(string id)
 	Mat_<uchar>::iterator itor = fragment.begin<uchar>();
 	Mat_<uchar>::iterator itorEnd = fragment.end<uchar>();
 
-	for(; itor !=itorEnd; ++itor){
-		if((*itor)>0){
+	for (; itor != itorEnd; ++itor)
+	{
+		if ((*itor) > 0)
+		{
 			pixelsSurface++;
 		}
 	}
@@ -135,7 +137,7 @@ int calculSurface(string id)
 
 float getScore(string filename, string reference, int dx, int dy, int da)
 {
-	float p=0;
+	float p = 0;
 	int r = 0;
 	int s = 0;
 	int surfaceTotale = 0;
@@ -159,8 +161,9 @@ float getScore(string filename, string reference, int dx, int dy, int da)
 
 		cout << gridReference[r][0] << " " << gridSolution[s][0] << " " << isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3])) << "\n";		
 		r++;
-		s++;*/	
-		if (gridReference[r][0] < gridSolution[s][0]){ // Vérifier que l'index est bon
+		s++;*/
+		if (gridReference[r][0] < gridSolution[s][0])
+		{ // Vérifier que l'index est bon
 			r++;
 		}
 		else if (gridReference[r][0] > gridSolution[s][0])
@@ -173,24 +176,26 @@ float getScore(string filename, string reference, int dx, int dy, int da)
 			s++;
 			surfaceBonne+=surfaceFausse +=calculSurface(gridSolution[r][0]);
 		}*/
-		else if (isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3]))){
+		else if (isPlacedRight(dx, dy, da, stoi(gridReference[r][1]), stoi(gridReference[r][2]), stod(gridReference[r][3]), stoi(gridSolution[s][1]), stoi(gridSolution[s][2]), stod(gridSolution[s][3])))
+		{
 			r++;
 			s++;
-			surfaceBonne+=calculSurface(gridSolution[r][0]);
+			surfaceBonne += calculSurface(gridSolution[r][0]);
 		}
-		else{
+		else
+		{
 			s++;
 			r++;
-			surfaceFausse+=calculSurface(gridSolution[s][0]);
+			surfaceFausse += calculSurface(gridSolution[s][0]);
 		}
-
 	}
 
-	if (surfaceTotale!=0){
-		p=float(surfaceBonne-surfaceFausse)/float(surfaceTotale);
+	if (surfaceTotale != 0)
+	{
+		p = float(surfaceBonne - surfaceFausse) / float(surfaceTotale);
 	}
-	
-		/* Imaginons on a :
+
+	/* Imaginons on a :
 			
 						
 			Solution.txt
@@ -216,7 +221,7 @@ float getScore(string filename, string reference, int dx, int dy, int da)
 int main(int argc, char **argv)
 {
 	// showImageFragments("fragments.txt");
-	cout << getScore("solution.txt", "fragments.txt", 1, 1, 1)*100<<"%";
+	cout << getScore("solution.txt", "fragments.txt", 1, 1, 1) * 100 << "%";
 
 	return 0;
 }
