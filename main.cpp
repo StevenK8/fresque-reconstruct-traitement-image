@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 using namespace cv;
